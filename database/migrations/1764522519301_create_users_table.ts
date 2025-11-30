@@ -10,7 +10,7 @@ export default class extends BaseSchema {
       table.string('email').notNullable().unique()
       table.string('password').notNullable()
       table.string('cpf').nullable().unique()
-      table.enum('role', ['ORGANIZADOR', 'PARTICIPANTE']).defaultTo('PARTICIPANTE')
+      table.enum('papel', ['ORGANIZADOR', 'PARTICIPANTE']).defaultTo('PARTICIPANTE')
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

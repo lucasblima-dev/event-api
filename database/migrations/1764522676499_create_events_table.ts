@@ -9,9 +9,9 @@ export default class extends BaseSchema {
       table.string('nome').notNullable()
       table.timestamp('date').notNullable()
       table.string('location').notNullable()
-      table.integer('max_capacity').notNullable()
+      table.integer('capacidade_max').notNullable()
 
-      table.integer('organizer_id').unsigned().references('users.id').onDelete('CASCADE')
+      table.integer('organizador_id').unsigned().references('users.id').onDelete('CASCADE')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
