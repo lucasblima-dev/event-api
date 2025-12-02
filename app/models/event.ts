@@ -8,7 +8,7 @@ export default class Event extends BaseModel {
   declare id: number
 
   @column()
-  declare nome: string
+  declare fullName: string
 
   @column.dateTime()
   declare date: DateTime

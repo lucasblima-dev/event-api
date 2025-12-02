@@ -5,6 +5,7 @@ import { BaseModel, column, hasMany, manyToMany } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import type { HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
 import Event from '#models/event'
+import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 
 const AuthUser = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -16,7 +17,7 @@ export default class User extends compose(BaseModel, AuthUser) {
   declare id: number
 
   @column()
-  declare nome_completo: string
+  declare fullName: string
 
   @column()
   declare email: string
@@ -28,7 +29,7 @@ export default class User extends compose(BaseModel, AuthUser) {
   declare cpf: string | null
 
   @column()
-  declare papel: 'ORGANIZADOR' | 'PARTICIPANTE'
+  declare role: 'ORGANIZADOR' | 'PARTICIPANTE'
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -44,4 +45,6 @@ export default class User extends compose(BaseModel, AuthUser) {
     pivotTimestamps: true,
   })
   declare events: ManyToMany<typeof Event>
+
+  static accessTokens = DbAccessTokensProvider.forModel(User)
 }
