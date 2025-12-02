@@ -12,4 +12,9 @@ export default class UserRepository {
   async findById(id: number) {
     return await User.find(id)
   }
+
+  async update(user: User, data: Partial<User>) {
+    user.merge(data)
+    return await user.save()
+  }
 }

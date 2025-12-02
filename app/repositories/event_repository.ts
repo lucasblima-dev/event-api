@@ -1,4 +1,5 @@
 import Event from '#models/event'
+import User from '#models/user'
 
 export default class EventRepository {
   async create(data: Partial<Event>) {
@@ -20,5 +21,13 @@ export default class EventRepository {
   async countParticipants(event: Event) {
     const result = await event.related('participants').query().count('* as total')
     return Number(result[0].$extras.total)
+  }
+
+  async getEventsByParticipant(user: User) {
+    return await user.related('events').query()
+  }
+
+  async removeParticipant(event: Event, userId: number) {
+    await event.related('participants').detach([userId])
   }
 }
