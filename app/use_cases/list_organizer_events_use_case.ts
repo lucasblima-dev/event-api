@@ -10,6 +10,6 @@ export default class ListOrganizerEventsUseCase {
       throw new Error('Apenas organizadores podem listar seus eventos.')
     }
 
-    return await this.eventRepo.getEventsByOrganizer()
+    return await this.eventRepo.getEventsByOrganizer(user.id)
   }
 }

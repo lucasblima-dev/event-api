@@ -10,8 +10,8 @@ export default class EventRepository {
     return await Event.find(id)
   }
 
-  async getEventsByOrganizer() {
-    return await Event.all()
+  async getEventsByOrganizer(organizerId: number) {
+    return await Event.query().where('organizador_id', organizerId).orderBy('date', 'asc')
   }
 
   async findAll() {
