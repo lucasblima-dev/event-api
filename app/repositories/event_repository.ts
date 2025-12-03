@@ -14,6 +14,14 @@ export default class EventRepository {
     return await Event.all()
   }
 
+  async findAll() {
+    return await Event.query().preload('organizer')
+  }
+
+  async getParticipants(event: Event) {
+    return await event.related('participants').query()
+  }
+
   async addParticipant(event: Event, userId: number) {
     await event.related('participants').attach([userId])
   }

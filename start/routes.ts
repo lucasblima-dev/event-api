@@ -15,13 +15,17 @@ router.post('login', [AuthController, 'login'])
 router
   .group(() => {
     //Participante
-    router.put('participant/profile', [ParticipantsController, 'update'])
     router.get('participant/events', [ParticipantsController, 'indexMyEvents'])
+    router.put('participant/profile', [ParticipantsController, 'update'])
     router.delete('participant/events/:id', [ParticipantsController, 'cancelSubscription'])
 
+    router.get('events', [EventsController, 'index'])
+    router.post('events/:id/register', [EventsController, 'register'])
+
     //Organizador
-    router.post('events', [EventsController, 'create'])
+    router.get('events/:id/participants', [EventsController, 'participants'])
     router.get('organizer/events', [EventsController, 'indexMyEvents'])
+    router.post('events', [EventsController, 'create'])
     router.put('events/:id', [EventsController, 'update'])
     router.delete('events/:id', [EventsController, 'destroy'])
   })

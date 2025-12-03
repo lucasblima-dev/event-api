@@ -5,6 +5,8 @@ import ListOrganizerEventsUseCase from '#use_cases/list_organizer_events_use_cas
 import UpdateEventUseCase from '#use_cases/update_event_use_case'
 import DeleteEventUseCase from '#use_cases/delete_event_use_case'
 import { createEventValidator, updateEventValidator } from '#validators/event'
+import RegisterParticipantUseCase from '#use_cases/register_participant_use_case'
+import ListEventParticipantsUseCase from '#use_cases/list_event_participants_use_case'
 
 export default class EventsController {
   async create({ request, auth, response }: HttpContext) {
@@ -63,6 +65,42 @@ export default class EventsController {
     try {
       const result = await useCase.execute(eventId, user)
       return response.ok(result)
+    } catch (error) {
+      return response.badRequest({ message: error.message })
+    }
+  }
+
+  async register({ params, auth, response }: HttpContext) {
+    const user = auth.user!
+    const eventId = params.id
+
+    const eventRepo = new EventRepository()
+    const useCase = new RegisterParticipantUseCase(eventRepo)
+
+    try {
+      const result = await useCase.execute(user, eventId)
+      return response.created(result)
+    } catch (error) {
+      return response.badRequest({ message: error.message })
+    }
+  }
+
+  async index({ response }: HttpContext) {
+    const eventRepo = new EventRepository()
+    const events = await eventRepo.findAll()
+    return response.ok(events)
+  }
+
+  async participants({ params, auth, response }: HttpContext) {
+    const user = auth.user!
+    const eventId = params.id
+
+    const eventRepo = new EventRepository()
+    const useCase = new ListEventParticipantsUseCase(eventRepo)
+
+    try {
+      const participants = await useCase.execute(eventId, user)
+      return response.ok(participants)
     } catch (error) {
       return response.badRequest({ message: error.message })
     }

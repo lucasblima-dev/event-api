@@ -10,6 +10,8 @@ export const createEventValidator = vine.compile(
       .transform((date) => DateTime.fromJSDate(date)),
 
     capacidadeMax: vine.number().min(1),
+
+    location: vine.string().trim().minLength(3),
   })
 )
 
