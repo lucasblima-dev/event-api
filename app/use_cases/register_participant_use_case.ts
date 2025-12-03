@@ -8,9 +8,7 @@ export default class RegisterParticipantUseCase {
   async execute(user: User, eventId: number) {
     const event = await this.eventRepo.findById(eventId)
 
-    if (!event) {
-      throw new Error('Evento não encontrado.')
-    }
+    if (!event) throw new Error('Evento não encontrado.')
 
     const alreadyRegistered = await user
       .related('events')
@@ -18,9 +16,7 @@ export default class RegisterParticipantUseCase {
       .where('event_id', event.id)
       .first()
 
-    if (alreadyRegistered) {
-      throw new Error('Você já está inscrito neste evento.')
-    }
+    if (alreadyRegistered) throw new Error('Você já está inscrito neste evento.')
 
     const hasTimeConflict = await user
       .related('events')
@@ -28,8 +24,12 @@ export default class RegisterParticipantUseCase {
       .where('date', event.date.toSQL()!)
       .first()
 
-    if (hasTimeConflict) {
-      throw new Error('Você já tem um evento agendado para este horário.')
+    if (hasTimeConflict) throw new Error('Você já tem um evento agendado para este horário.')
+
+    const currentParticipants = await this.eventRepo.countParticipants(event)
+
+    if (currentParticipants >= event.capacidadeMax) {
+      throw new Error('Evento lotado! Não há mais vagas disponíveis.')
     }
 
     await this.eventRepo.addParticipant(event, user.id)
